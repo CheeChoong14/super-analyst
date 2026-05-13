@@ -67,9 +67,7 @@ export async function POST(request: NextRequest) {
         /* ── 2. Upload CSV to Anthropic Files API ────────────── */
         send(controller, encoder, { type: "status", message: "Uploading CSV…" });
 
-        const dataset = await client.beta.files.upload(
-          { file, betas: [BETA] },
-        );
+        const dataset = await client.beta.files.upload({ file, betas: [BETA] });
 
         /* ── 3. Create environment ───────────────────────────── */
         send(controller, encoder, {
@@ -116,9 +114,7 @@ export async function POST(request: NextRequest) {
         const session = await client.beta.sessions.create({
           environment_id: env.id,
           agent: { type: "agent", id: agent.id, version: agent.version },
-          resources: [
-            { type: "file", file_id: dataset.id, mount_path: mountPath },
-          ],
+          resources: [{ type: "file", file_id: dataset.id, mount_path: mountPath }],
           title: `Analysis: ${file.name}`,
           betas: [BETA],
         });
@@ -157,10 +153,7 @@ Produce a comprehensive report.html per your system instructions.`;
         send(controller, encoder, { type: "status", message: "Analyzing data…" });
 
         /* ── 7. Stream session events ────────────────────────── */
-        const eventStream = await client.beta.sessions.events.stream(
-          session.id,
-          { betas: [BETA] }
-        );
+        const eventStream = await client.beta.sessions.events.stream(session.id, { betas: [BETA] });
 
         for await (const ev of eventStream) {
           if (ev.type === "agent.message") {
@@ -217,8 +210,7 @@ Produce a comprehensive report.html per your system instructions.`;
       } catch (err: unknown) {
         send(controller, encoder, {
           type: "error",
-          message:
-            err instanceof Error ? err.message : "An unexpected error occurred.",
+          message: err instanceof Error ? err.message : "An unexpected error occurred.",
         });
       } finally {
         controller.close();

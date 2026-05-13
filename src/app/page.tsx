@@ -50,13 +50,23 @@ const SpinnerIcon = () => (
 
 const SendIcon = () => (
   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+    />
   </svg>
 );
 
 const ChatBubbleIcon = () => (
   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+    />
   </svg>
 );
 
@@ -68,7 +78,10 @@ const CloseIcon = () => (
 
 function parseColumns(csvText: string): string[] {
   const firstLine = csvText.split("\n")[0] ?? "";
-  return firstLine.split(",").map((c) => c.trim().replace(/^"|"$/g, "")).filter(Boolean);
+  return firstLine
+    .split(",")
+    .map((c) => c.trim().replace(/^"|"$/g, ""))
+    .filter(Boolean);
 }
 
 export default function Home() {
@@ -342,9 +355,7 @@ export default function Home() {
               case "progress":
                 statusText = event.message as string;
                 setRefineMessages((prev) =>
-                  prev.map((m, i) =>
-                    i === prev.length - 1 ? { ...m, text: statusText } : m
-                  )
+                  prev.map((m, i) => (i === prev.length - 1 ? { ...m, text: statusText } : m))
                 );
                 setTimeout(() => refineEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
                 break;
@@ -352,9 +363,7 @@ export default function Home() {
                 setReportHtml(event.html as string);
                 setRefineMessages((prev) =>
                   prev.map((m, i) =>
-                    i === prev.length - 1
-                      ? { ...m, text: "Report updated!", loading: false }
-                      : m
+                    i === prev.length - 1 ? { ...m, text: "Report updated!", loading: false } : m
                   )
                 );
                 setTimeout(() => refineEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
@@ -488,9 +497,7 @@ export default function Home() {
                 >
                   <div
                     className={`max-w-[280px] rounded-2xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap ${
-                      msg.role === "user"
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-800 text-gray-100"
+                      msg.role === "user" ? "bg-blue-600 text-white" : "bg-gray-800 text-gray-100"
                     }`}
                   >
                     {msg.loading ? (
@@ -532,7 +539,9 @@ export default function Home() {
                 </button>
               </div>
               {!sessionId && (
-                <p className="mt-1.5 text-xs text-yellow-600">Session expired — start a new analysis to refine.</p>
+                <p className="mt-1.5 text-xs text-yellow-600">
+                  Session expired — start a new analysis to refine.
+                </p>
               )}
             </div>
           </div>
@@ -569,9 +578,7 @@ export default function Home() {
               >
                 <div
                   className={`max-w-lg rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
-                    msg.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-800 text-gray-100"
+                    msg.role === "user" ? "bg-blue-600 text-white" : "bg-gray-800 text-gray-100"
                   }`}
                 >
                   {msg.text}
@@ -582,9 +589,15 @@ export default function Home() {
               <div className="flex justify-start">
                 <div className="bg-gray-800 rounded-2xl px-4 py-2.5 text-sm text-gray-400">
                   <span className="inline-flex gap-1">
-                    <span className="animate-bounce" style={{ animationDelay: "0ms" }}>·</span>
-                    <span className="animate-bounce" style={{ animationDelay: "150ms" }}>·</span>
-                    <span className="animate-bounce" style={{ animationDelay: "300ms" }}>·</span>
+                    <span className="animate-bounce" style={{ animationDelay: "0ms" }}>
+                      ·
+                    </span>
+                    <span className="animate-bounce" style={{ animationDelay: "150ms" }}>
+                      ·
+                    </span>
+                    <span className="animate-bounce" style={{ animationDelay: "300ms" }}>
+                      ·
+                    </span>
                   </span>
                 </div>
               </div>
@@ -646,15 +659,11 @@ export default function Home() {
               {stage === "running" ? (
                 <>
                   <SpinnerIcon />
-                  <span className="text-sm font-medium text-white">
-                    Analyzing {fileName}…
-                  </span>
+                  <span className="text-sm font-medium text-white">Analyzing {fileName}…</span>
                 </>
               ) : (
                 <>
-                  <span className="text-sm font-medium text-red-400">
-                    Analysis failed
-                  </span>
+                  <span className="text-sm font-medium text-red-400">Analysis failed</span>
                   <button
                     onClick={reset}
                     className="ml-auto text-xs text-blue-400 hover:text-blue-300"
@@ -672,10 +681,10 @@ export default function Home() {
                     log.kind === "status"
                       ? "text-blue-400"
                       : log.kind === "tool"
-                      ? "text-yellow-400"
-                      : log.kind === "error"
-                      ? "text-red-400"
-                      : "text-gray-400"
+                        ? "text-yellow-400"
+                        : log.kind === "error"
+                          ? "text-red-400"
+                          : "text-gray-400"
                   }`}
                 >
                   {log.kind === "tool" && <span className="mr-1 text-yellow-600">$</span>}
@@ -700,7 +709,10 @@ export default function Home() {
       <main className="flex flex-1 flex-col items-center justify-center gap-8 p-6">
         <div className="w-full max-w-md">
           <div
-            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
@@ -711,9 +723,7 @@ export default function Home() {
             }`}
           >
             <UploadIcon />
-            <p className="mb-1 text-base font-medium text-white">
-              Drop your CSV here
-            </p>
+            <p className="mb-1 text-base font-medium text-white">Drop your CSV here</p>
             <p className="text-sm text-gray-500">or click to browse</p>
             <input
               ref={fileInputRef}

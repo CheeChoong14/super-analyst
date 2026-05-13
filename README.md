@@ -67,6 +67,6 @@ src/
 
 ## Environment variables
 
-| Variable | Description |
-|---|---|
+| Variable            | Description                                                             |
+| ------------------- | ----------------------------------------------------------------------- |
 | `ANTHROPIC_API_KEY` | Your Anthropic API key (server-side only, never exposed to the browser) |
