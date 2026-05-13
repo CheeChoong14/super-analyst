@@ -123,10 +123,19 @@ export async function POST(request: NextRequest) {
           betas: [BETA],
         });
 
+        /* ── 5b. Emit session ID so the client can refine later ─ */
+        send(controller, encoder, { type: "session_id", id: session.id });
+
         /* ── 6. Send analysis prompt ─────────────────────────── */
+        const requirements = formData.get("requirements") as string | null;
+
+        const requirementsSection = requirements
+          ? `## User's specific requirements\n${requirements}\n\nAddress these requirements directly, and also cover:`
+          : "Perform a comprehensive analysis covering:";
+
         const prompt = `Analyze the data in ${mountPath}.
 
-Perform a comprehensive analysis covering:
+${requirementsSection}
 1. Data overview — shape, columns, types, missing values
 2. Key statistical summaries for numeric columns
 3. Trends, distributions, and notable patterns
@@ -203,12 +212,8 @@ Produce a comprehensive report.html per your system instructions.`;
 
         send(controller, encoder, { type: "report", html: reportHtml });
 
-        /* ── 9. Cleanup ──────────────────────────────────────── */
-        try {
-          await client.beta.sessions.archive(session.id, { betas: [BETA] });
-        } catch {
-          // non-fatal
-        }
+        /* ── 9. Keep session alive for follow-up refinements ─── */
+        // Session is intentionally not archived here so /api/refine can reuse it.
       } catch (err: unknown) {
         send(controller, encoder, {
           type: "error",
